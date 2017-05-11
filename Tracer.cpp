@@ -45,13 +45,13 @@ Tracer::~Tracer() {
 Color Tracer::castRay(Ray ray, int recursions) {
 	// find nearest intersecting object
 	float minTValue = INFINITY;
-	int nearestIndex = -1;
+	SceneObject *nearest = NULL;
 	vector<SceneObject*> sceneObjects = scene->getObjects();
-	for (size_t k = 0; k < sceneObjects.size(); k++) {
-		float t = sceneObjects[k]->intersection(ray);
+	for (auto it = sceneObjects.begin(); it != sceneObjects.end() ; ++it) {
+		float t = (*it)->intersection(ray);
 		if (t < minTValue) {
-			nearestIndex = k;
 			minTValue = t;
+			nearest = *it;
 		}
 	}
 
@@ -59,16 +59,15 @@ Color Tracer::castRay(Ray ray, int recursions) {
 		return Color(-1,-1,-1);
 	}
 
-	SceneObject *object = sceneObjects[nearestIndex];
 	Vec3f intersectPt = ray.origin + ray.direction.scale(minTValue);
-	Vec3f norm = object->getNormal(intersectPt);
-	Color col = calculateColor(object, norm, ray, minTValue);
+	Vec3f norm = nearest->getNormal(intersectPt);
+	Color col = calculateColor(nearest, norm, ray, minTValue);
 
 	if (recursions >= maxRecursions) {
 		return col;
 	}
 
-	Color spec = object->getMaterial().getSpecular();
+	Color spec = nearest->getMaterial().getSpecular();
 	if (spec.r == 0 && spec.g == 0 && spec.b == 0) {
 		return col;
 	}
@@ -99,19 +98,20 @@ Color Tracer:: calculateColor(SceneObject *object, Vec3f norm, Ray ray, float t)
 	vector<Light*> lights = scene->getLights();
 	vector<SceneObject*> sceneObjects = scene->getObjects();
 	Color sum(0, 0, 0);
-	for (size_t k = 0; k < lights.size(); k++) {
-		Color Em = lights[k]->getColor();
+
+	for (auto lightIt = lights.begin(); lightIt != lights.end() ; ++lightIt) {
+		Color Em = (*lightIt)->getColor();
 		Color R = object->getMaterial().getReflected();
-		Vec3f dir = lights[k]->getDirection();
+		Vec3f dir = (*lightIt)->getDirection();
 
 		// create shadow ray
 		Vec3f shadowOrigin = ray.origin + ray.direction.scale(t);
 		Ray shadowRay(shadowOrigin, dir.scale(-1));
-		
+
 		// determine if it intersects with any objects
 		bool shadow = false;
-		for (size_t k = 0; k < sceneObjects.size() && !shadow; k++) {
-			float t = sceneObjects[k]->intersection(shadowRay);
+		for (auto objectIt = sceneObjects.begin(); objectIt != sceneObjects.end() ; ++objectIt) {
+			float t = (*objectIt)->intersection(shadowRay);
 			if (t < INFINITY) {
 				shadow = true;
 			}
@@ -123,6 +123,7 @@ Color Tracer:: calculateColor(SceneObject *object, Vec3f norm, Ray ray, float t)
 			sum = sum + (Em*R).scale(cosThetam);
 		}
 	}
+
 	Color I(object->getMaterial().getAmbient() + sum);
 	I.clamp();
 	return I;

@@ -241,8 +241,8 @@ void background(char* token, const char *delims) {
 		argsIgnored(3);
 	}
 
-	for (size_t i = 0; i < params.size(); i++) {
-		if (params[i] < 0 || params[i] > 1) {
+	for (auto it = params.begin(); it != params.end() ; ++it) {
+		if (*it < 0 || *it > 1) {
 			colorValuesErrorMsg();
 			return;
 		}
@@ -294,8 +294,8 @@ void sphere(char* token, const char *delims) {
 		}
 	}
 
-	for (size_t i = 0; i < specParams.size(); i++) {
-		params.push_back(specParams[i]);
+	for (auto it = specParams.begin(); it != specParams.end() ; ++it) {
+		params.push_back(*it);
 	}
 
 	float radius = params[0];
@@ -352,8 +352,8 @@ void triangle(char* token, const char *delims) {
 		}
 	}
 
-	for (size_t i = 0; i < specParams.size(); i++) {
-		params.push_back(specParams[i]);
+	for (auto it = specParams.begin(); it != specParams.end() ; ++it) {
+		params.push_back(*it);
 	}
 
 	Vec3f pt1(params[0], params[1], params[2]);
@@ -410,8 +410,8 @@ void box(char* token, const char *delims) {
 		}
 	}
 
-	for (size_t i = 0; i < specParams.size(); i++) {
-		params.push_back(specParams[i]);
+	for (auto it = specParams.begin(); it != specParams.end() ; ++it) {
+		params.push_back(*it);
 	}
 
 	Vec3f u(params[0], params[1], params[2]);
@@ -468,8 +468,8 @@ void plane(char* token, const char *delims) {
 		}
 	}
 
-	for (size_t i = 0; i < specParams.size(); i++) {
-		params.push_back(specParams[i]);
+	for (auto it = specParams.begin(); it != specParams.end() ; ++it) {
+		params.push_back(*it);
 	}
 
 	Vec3f normal(params[0], params[1], params[2]);
@@ -548,7 +548,7 @@ void trace() {
 	cout << "Render Time: " << renderTime << " second(s)" << endl;
 }
 
-void test() {
+void debug() {
 	Scene *scene = Scene::getInstance();
 	scene->printObjects();
 	scene->printLights();
@@ -613,8 +613,8 @@ void dispatch(char line[]) {
   	clear();
   } else if (strcasecmp(token, "Trace") == 0) {
   	trace();
-  } else if (strcasecmp(token, "Test") == 0) {
-  	test();
+  } else if (strcasecmp(token, "Debug") == 0) {
+  	debug();
   } else if (strcasecmp(token, "Read") == 0) {
   	read(token, delims);
   } else if (strcasecmp(token, "Plane") == 0) {

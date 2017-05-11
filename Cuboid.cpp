@@ -4,13 +4,13 @@
 using namespace std;
 
 
-Cuboid::Cuboid(): pointU(Vec3f(0,0,0)), pointV(Vec3f(0,0,0)), cachedIndex(-1) {}
+Cuboid::Cuboid(): pointU(Vec3f(0,0,0)), pointV(Vec3f(0,0,0)), cachedObj(NULL) {}
 
 Cuboid::Cuboid(Vec3f u, Vec3f v, Material material): 
 		SceneObject(material), 
 		pointU(u),
 		pointV(v),
-		cachedIndex(-1) {
+		cachedObj(NULL) {
 
 	Vec3f a(u.x, u.y, v.z);
 	Vec3f b(u.x, u.y, u.z);
@@ -36,28 +36,26 @@ Cuboid::Cuboid(Vec3f u, Vec3f v, Material material):
 }
 
 float Cuboid::intersection(Ray ray) {
+	cachedObj = NULL; // reset
 	float minTValue = INFINITY;
-	int nearestIndex = -1;
-	for (size_t i = 0; i < triangles.size(); i++) {
-		float t = triangles[i].intersection(ray);
+	for (auto it = triangles.begin(); it != triangles.end() ; ++it) {
+		float t = it->intersection(ray);
 		if (t < minTValue) {
 			minTValue = t;
-			nearestIndex = i;
+			cachedObj = &(*it);
 		}
 	}
-	// will be -1 and INFINITY upon no intersection
-	cachedIndex = nearestIndex;
 	return minTValue;
 }
 
 // todo: throw exception on non intersecting point
 Vec3f Cuboid::getNormal(Vec3f point) const {
-	if (cachedIndex == -1) {
+	if (cachedObj == NULL) {
 		cout << "Error: normal asked from non-intersecting point" << endl;
 		return Vec3f(-1, -1, -1);
 	}
 
-	return triangles[cachedIndex].getNormal(point);
+	return cachedObj->getNormal(point);
 }
 
 void Cuboid::print() const {

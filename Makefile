@@ -1,5 +1,6 @@
 SHELL = /bin/sh
 prefix = /usr/lib/x86_64-linux-gnu
+CPPFLAGS =-g -std=c++11
 CC = gcc
 C++ = g++
 GLUT_LIBS = $(prefix)/libglut.so.3

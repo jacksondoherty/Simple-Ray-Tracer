@@ -62,32 +62,34 @@ Color Scene::getBackgroundColor() const {
 }
 
 void Scene::printObjects() const {
-	for (size_t i = 0; i < sceneObjects.size(); i++) {
-		cout << "Object #" << i+1 << endl;
-		sceneObjects[i]->print();
+	int i = 1;
+	for (auto it = sceneObjects.begin(); it != sceneObjects.end() ; ++it, i++) {
+		cout << "Object #" << i << endl;
+		(*it)->print();
 		cout << endl;
 	}
 }
 
 void Scene::printLights() const {
-	for (size_t i = 0; i < lights.size(); i++) {
-		cout << "Light #" << i + 1 << ":" << endl;
-		lights[i]->print();
+	int i = 1;
+	for (auto it = lights.begin(); it != lights.end() ; ++it, i++) {
+		cout << "Light #" << i << ":" << endl;
+		(*it)->print();
 	}
 }
 
 void Scene::clearObjects() {
-	for (size_t i = 0; i < sceneObjects.size(); i++) {
-		delete sceneObjects[i];
-		sceneObjects[i] = NULL;
+	for (auto it = sceneObjects.begin(); it != sceneObjects.end() ; ++it) {
+		delete *it;
+		*it = NULL;
 	}
 	sceneObjects.clear();
 }
 
 void Scene::clearLights() {
-	for (size_t i = 0; i < lights.size(); i++) {
-		delete lights[i];
-		lights[i] = NULL;
+	for (auto it = lights.begin(); it != lights.end() ; ++it) {
+		delete *it;
+		*it = NULL;
 	}
 	lights.clear();
 }

@@ -13,7 +13,7 @@ class Cuboid: public SceneObject {
 		Vec3f pointU;
 		Vec3f pointV;
 		vector<Triangle> triangles;
-		int cachedIndex; // -1 flag
+		Triangle *cachedObj; // NULL flag
 	public:
 		Cuboid();
 		Cuboid(Vec3f u, Vec3f v, Material material);
