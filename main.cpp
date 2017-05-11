@@ -592,7 +592,7 @@ void dispatch(char line[]) {
 	const char *delims = " ,\n";
 	char* token = strtok(line, delims);
 
-	// happens with comments
+	// occurs with comments
 	if (token == NULL) return;
 
   if (strcasecmp(token, "Orthocamera") == 0) {
