@@ -25,10 +25,9 @@ void Tracer::trace() {
 	Camera *camera = scene->getCamera();
 	for (int j = 0; j < camera->getScreenLength(); j++) {
 		for (int i = 0; i < camera->getScreenWidth(); i++) {
-
-			// create ray
+			
 			Ray cameraRay = camera->getCameraRay(i, j);
-
+			
 			Color col = castRay(cameraRay, 0);
 			if (col.r < 0 && col.g < 0 && col.b < 0) {
 				col = scene->getBackgroundColor();
