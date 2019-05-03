@@ -2,8 +2,7 @@ Simple Ray Tracer.
 
 NOTE #1: This program is for educational purposes.
   A production-level ray tracer would likely
-  want to eliminate classes etc. to optimize
-  efficiency.
+  want to eliminate classes etc. for performance.
 
 NOTE #2: All code labeled with '/* CS3258 SUPPLIED CODE */'
   was provided by the Computer Graphics course taught at 
